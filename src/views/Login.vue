@@ -53,7 +53,7 @@ export default {
     });
     onMounted(() => {
       axios
-        .get("/api/login", { params: unref(data) })
+        .get("/api/login")
         .then(response => {
           allowRegister.value = response.data.allowRegister;
           allowGuestUpload.value = response.data.allowGuestUpload;

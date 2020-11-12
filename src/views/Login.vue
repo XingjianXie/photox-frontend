@@ -29,7 +29,8 @@ Layout(title="Login")
 
 <script lang="ts">
 import Layout from "@/components/Layout.vue";
-import { ref, computed, reactive } from "vue";
+import { ref, unref, computed, reactive, onMounted } from "vue";
+import axios from "axios";
 import MenuItem from "@/components/MenuItem.vue";
 export default {
   name: "Login",
@@ -50,6 +51,20 @@ export default {
         data.pwd.length > 0
       );
     });
+    onMounted(() => {
+      axios
+        .get("/api/login", { params: unref(data) })
+        .then(response => {
+          allowRegister.value = response.data.allowRegister;
+          allowGuestUpload.value = response.data.allowGuestUpload;
+          background.value = response.data.background;
+          welcomeWord.value = response.data.welcomeWord;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    });
+
     return {
       allowRegister,
       allowGuestUpload,

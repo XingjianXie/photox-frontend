@@ -95,6 +95,7 @@ export default {
       for (const script of scripts) {
         const scriptElement = document.createElement("script");
         scriptElement.setAttribute("src", script);
+        scriptElement.async = false;
         document.head.appendChild(scriptElement);
       }
     });

@@ -2,8 +2,8 @@
 Layout(title="Login")
   template(v-slot:menu)
     MenuItem(href="/login", icon="fas fa-user-circle") Login
-    MenuItem(v-if="allowRegister", href="/register", icon="fas fa-registered") Register
-    MenuItem(v-if="allowGuestUpload", href="/guest_upload", icon="fas fa-upload") Guest Upload
+    MenuItem(v-if="view.allowRegister", href="/register", icon="fas fa-registered") Register
+    MenuItem(v-if="view.allowGuestUpload", href="/guest_upload", icon="fas fa-upload") Guest Upload
   .row.justify-content-center
     .col-sm-12.col-md-9.col-lg-11.col-xl-9
       .card.shadow-lg.o-hidden.border-0.my-5
@@ -12,11 +12,11 @@ Layout(title="Login")
         .card-body.p-0
           .row
             .col-lg-6.d-none.d-lg-flex
-              .flex-grow-1.bg-login-image(:style="{'background-image': 'url(/api/uploads/' + background + '.preview.jpg'}")
+              .flex-grow-1.bg-login-image(:style="{'background-image': 'url(/api/uploads/' + view.background + '.preview.jpg'}")
             .col-lg-6
               .p-5
                 .text-center
-                  h4.text-dark.pb-4 {{welcomeWord}}
+                  h4.text-dark.pb-4 {{view.welcomeWord}}
                 form.user
                   .form-group
                     input.form-control.form-control-user(v-model="data.phone_number", type="text", placeholder="Phone Number", autocomplete="off", spellcheck="false", maxlength=11)
@@ -29,17 +29,19 @@ Layout(title="Login")
 
 <script lang="ts">
 import Layout from "@/components/Layout.vue";
-import { ref, unref, computed, reactive, onMounted } from "vue";
+import { ref, computed, reactive, onMounted } from "vue";
 import axios from "axios";
 import MenuItem from "@/components/MenuItem.vue";
 import router from "@/router";
 export default {
   name: "Login",
   setup() {
-    const allowRegister = ref(false);
-    const allowGuestUpload = ref(false);
-    const background = ref(0);
-    const welcomeWord = ref("");
+    const view = ref({
+      allowRegister: false,
+      allowGuestUpload: false,
+      background: 0,
+      welcomeWord: ""
+    });
     const data = reactive({
       // eslint-disable-next-line @typescript-eslint/camelcase
       phone_number: "",
@@ -74,10 +76,7 @@ export default {
       axios
         .get("/api/login")
         .then(response => {
-          allowRegister.value = response.data.allowRegister;
-          allowGuestUpload.value = response.data.allowGuestUpload;
-          background.value = response.data.background;
-          welcomeWord.value = response.data.welcomeWord;
+          view.value = response.data.content.view;
         })
         .catch(error => {
           console.log(error);
@@ -85,10 +84,7 @@ export default {
     });
 
     return {
-      allowRegister,
-      allowGuestUpload,
-      background,
-      welcomeWord,
+      view,
       validateInput,
       data,
       submit

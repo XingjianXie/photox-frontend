@@ -45,7 +45,7 @@ nav.navbar.navbar-dark.align-items-start.sidebar.sidebar-dark.accordion.bg-gradi
                 |  Type: {{user.typeName}}
               .dropdown-divider
               template(v-if="user.login")
-                router-link.dropdown-item(role='presentation', to='/logout')
+                a.dropdown-item(role='presentation', href, @click.prevent="logout")
                   i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
                   |  Logout
               template(v-else)
@@ -69,6 +69,7 @@ router-link.border.rounded.d-inline.scroll-to-top(to='#page-top')
 import { ref, reactive, onMounted } from "vue";
 import MenuItem from "@/components/MenuItem.vue";
 import axios from "axios";
+import router from "@/router";
 
 export default {
   name: "Layout",
@@ -79,24 +80,27 @@ export default {
     title: String
   },
   setup() {
-    onMounted(() => {
-      const scripts = [
-        "/assets/js/jquery.min.js",
-        "/assets/bootstrap/js/bootstrap.min.js",
-        "/assets/js/chart.min.js",
-        "/assets/js/bs-charts.js",
-        "/javascripts/jquery.easing.min.js",
-        "/assets/js/theme.js"
-      ];
-      for (const script of scripts) {
-        const scriptElement = document.createElement("script");
-        scriptElement.setAttribute("src", script);
-        scriptElement.async = false;
-        document.head.appendChild(scriptElement);
-      }
+    const user = ref({
+      login: false,
+      name: "GUEST",
+      id: -1,
+      type: -1,
+      typeName: "Guest",
+      allowRegister: false
     });
-    const user = ref({});
     const message = ref(0);
+    function logout() {
+      axios.get("/api/logout").then(response => {
+        switch (response.data.code) {
+          case 302:
+            router.replace(response.data.url);
+            break;
+          default:
+            console.log(response.data);
+            break;
+        }
+      });
+    }
     onMounted(() => {
       axios
         .get("/api/layout")
@@ -110,7 +114,8 @@ export default {
     });
     return {
       user,
-      message
+      message,
+      logout
     };
   }
 };

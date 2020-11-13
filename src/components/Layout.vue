@@ -7,7 +7,7 @@ nav.navbar.navbar-dark.align-items-start.sidebar.sidebar-dark.accordion.bg-gradi
       .sidebar-brand-text.mx-3
         span PhotoX
     hr.sidebar-divider.my-0
-    ul#accordionSidebar.nav.navbar-nav.text-light
+    ul.nav.navbar-nav.text-light
       slot(name="menu")
         MenuItem(href="/gallery", icon="fas fa-images") Gallery
         MenuItem(href="/message", icon="fas fa-comment-alt") Message
@@ -20,15 +20,10 @@ nav.navbar.navbar-dark.align-items-start.sidebar.sidebar-dark.accordion.bg-gradi
           MenuItem(href="/log", icon="fas fa-book") Log
           MenuItem(href="/status", icon="fas fa-tachometer-alt") Status
           MenuItem(href="/config", icon="fas fa-wrench") Config
-
-    .text-center.d-none.d-md-inline
-      button#sidebarToggle.btn.rounded-circle.border-0(type='button')
 #content-wrapper.d-flex.flex-column
   #content
     nav.navbar.navbar-light.navbar-expand.bg-white.shadow.mb-4.topbar.static-top
       .container-fluid.justify-content-start
-        button#sidebarToggleTop.btn.btn-link.d-md-none.rounded-circle.mr-3(type='button')
-          i.fas.fa-bars
         h3.text-dark.mb-0.m-2.d-none.d-md-inline {{title}}
         h5.text-dark.mb-0.m-2.d-md-none {{title}}
         .nav.navbar-nav.flex-nowrap.ml-auto

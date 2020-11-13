@@ -1,12 +1,17 @@
 <template lang="pug">
+Layout(title="Gallery")
 </template>
 
 <script lang="ts">
 import { onMounted } from "vue";
 import axios from "axios";
 import router from "@/router";
+import Layout from "@/components/Layout.vue";
 export default {
   name: "Login",
+  components: {
+    Layout
+  },
   setup() {
     onMounted(() => {
       axios

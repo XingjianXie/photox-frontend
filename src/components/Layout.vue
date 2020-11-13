@@ -39,21 +39,16 @@ nav.navbar.navbar-dark.align-items-start.sidebar.sidebar-dark.accordion.bg-gradi
               span.d-inline.mr-2.text-gray-600.small(v-if="user.login") {{user.name}}
               span.d-inline.mr-2.text-gray-600.small(v-else) GUEST
             .dropdown-menu.shadow.dropdown-menu-right.animated--grow-in(role='menu')
+              .dropdown-item(role='presentation')
+                |  User ID: {{user.id}}
+              .dropdown-item(role='presentation')
+                |  Type: {{user.typeName}}
+              .dropdown-divider
               template(v-if="user.login")
-                .dropdown-item(role='presentation')
-                  |  User ID: {{user.id}}
-                .dropdown-item(role='presentation')
-                  |  Type: {{user.typeName}}
-                .dropdown-divider
                 router-link.dropdown-item(role='presentation', to='/logout')
                   i.fas.fa-sign-out-alt.fa-sm.fa-fw.mr-2.text-gray-400
                   |  Logout
               template(v-else)
-                .dropdown-item(role='presentation')
-                  |  User ID: -1
-                .dropdown-item(role='presentation')
-                  |  Type: Guest
-                .dropdown-divider
                 router-link.dropdown-item(role='presentation', to='/login')
                   i.fas.fa-user-circle.fa-sm.fa-fw.mr-2.text-gray-400
                   |  Login
@@ -73,6 +68,7 @@ router-link.border.rounded.d-inline.scroll-to-top(to='#page-top')
 <script lang="ts">
 import { ref, reactive, onMounted } from "vue";
 import MenuItem from "@/components/MenuItem.vue";
+import axios from "axios";
 
 export default {
   name: "Layout",
@@ -99,15 +95,19 @@ export default {
         document.head.appendChild(scriptElement);
       }
     });
-    const user = reactive({
-      login: false,
-      name: "",
-      id: 0,
-      type: 0,
-      typeName: "",
-      allowRegister: false
-    });
+    const user = ref({});
     const message = ref(0);
+    onMounted(() => {
+      axios
+        .get("/api/layout")
+        .then(response => {
+          user.value = response.data.content.user;
+          message.value = response.data.content.message;
+        })
+        .catch(error => {
+          console.log(error);
+        });
+    });
     return {
       user,
       message

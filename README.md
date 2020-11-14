@@ -1,5 +1,7 @@
 # photox-frontend
 
+Frontend for [PhotoX API](https://github.com/mark07x/PhotoX/tree/api)
+
 ## Project setup
 ```
 npm install

@@ -10,6 +10,10 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("@/views/Login.vue")
   },
   {
+    path: "/gallery",
+    component: () => import("@/views/Gallery.vue")
+  },
+  {
     path: "/:pathMatch(.*)*",
     component: () => import("@/components/Notification.vue"),
     props: {
